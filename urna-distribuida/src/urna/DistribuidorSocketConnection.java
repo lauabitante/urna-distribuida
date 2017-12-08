@@ -10,15 +10,19 @@ import java.nio.charset.Charset;
 
 class DistribuidorSocketConnection extends Thread {
 	// Input e Output do Distribuidor
+	// Por onde troca mensagens com a urna
     InputStream input;
     PrintWriter output;
     Socket socket;
     
     // Input e Output do Comissario
+    // Por onde troca mensagens com o comissário
     DataInputStream comissarioInput;
     DataOutputStream comissarioOutput;
     Socket comissario;
 
+    // Construtor, onde é feita a conexão com a porta aberta pelo comissário.
+    // Configuração dos inputs e outputs
     public DistribuidorSocketConnection(Socket socket) {
         super("Distribuidor");
         this.socket = socket;
@@ -27,7 +31,7 @@ class DistribuidorSocketConnection extends Thread {
             output = new PrintWriter(new DataOutputStream(socket.getOutputStream()));
             
         	comissario = new Socket("localhost", 8001);
-            System.out.println("Distribuidor: Conectado ao Comissario");
+            System.out.println("Distribuidor: Conectado ao Comissário");
             
             comissarioInput = new DataInputStream(comissario.getInputStream());
             comissarioOutput = new DataOutputStream(comissario.getOutputStream());
@@ -42,9 +46,9 @@ class DistribuidorSocketConnection extends Thread {
         try {
             while (true) {
                 do {
-                	byte array[] = new byte[1024];
-                    input.read(array);
-                    String mensagem = new String(array).trim();
+                	byte array[] = new byte[1024]; // Array que irá conter a string que veio do socket
+                    input.read(array); // Preenche o array com os dados do socket
+                    String mensagem = new String(array).trim(); // Criada a string apartir do array
                     if (mensagem.equals("CONECTAR")) {
                     	conectar();
                     } else {
@@ -90,7 +94,7 @@ class DistribuidorSocketConnection extends Thread {
         return sessao;
     }
     
-    // Valida o titulo de eleitor com o Comissário.
+    // Valida o titulo de eleitor junto ao Comissário.
     public String validar(String titulo) throws UnknownHostException, IOException  {
         System.out.println("Distribuidor: Requisitando verificação de titulo: " + titulo);
         comissarioOutput.writeUTF("VALIDAR|"+titulo);

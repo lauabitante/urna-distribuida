@@ -1,18 +1,15 @@
 package urna;
 
-//import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-//import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-//import javax.swing.JPanel;
 
 public class PainelThread implements Runnable {
 	
@@ -48,7 +45,6 @@ class PainelSocketConnection extends Thread {
 	
 	public PainelSocketConnection(Socket socket) {
         super("Painel");
-        showPainel();
         this.socket = socket;
         try {
         	input = new DataInputStream(socket.getInputStream());
@@ -80,12 +76,13 @@ class PainelSocketConnection extends Thread {
 	public void showPainel() {
 		if (showPainel == false) {
 			showPainel = true;
+			mainFrame.setVisible(false);
 			mainFrame.setSize(240,120);
 			mainFrame.setLayout(new GridLayout(5, 5));
 
-			JLabel candidato1 = new JLabel("Candidato 1", JLabel.LEFT);
-			JLabel candidato2 = new JLabel("Candidato 2",JLabel.LEFT);
-			JLabel candidato3 = new JLabel("Candidato 3", JLabel.LEFT);
+			JLabel candidato1 = new JLabel("João", JLabel.LEFT);
+			JLabel candidato2 = new JLabel("Maria",JLabel.LEFT);
+			JLabel candidato3 = new JLabel("Pedro", JLabel.LEFT);
 
 			mainFrame.add(candidato1);
 			mainFrame.add(votosCandidato1);
@@ -108,6 +105,7 @@ class PainelSocketConnection extends Thread {
                     String mensagem = new String(array).trim();
                     votos.add(mensagem);
                     System.out.println("PAINEL:" + mensagem);
+                    showPainel();
                     atualizaPainel();
                     output.flush();
                 } while (input.available() != 0);

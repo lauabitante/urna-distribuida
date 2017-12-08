@@ -30,12 +30,10 @@ class ContadorSocketConnection extends Thread {
     	candidatos.add("1");
     	candidatos.add("2");
     	candidatos.add("3");
-    	candidatos.add("4");
-    	candidatos.add("5");
     }
     
-    // Construção da classe com o socket
-    // Aqui tambem é feita a conexão do Contador com o comissário.
+    // Construtor
+    // Onde é feita a conexão do Contador com o comissário e com o painel
     public ContadorSocketConnection(Socket socket) {
         super("Contador");
         this.socket = socket;
@@ -75,6 +73,7 @@ class ContadorSocketConnection extends Thread {
     }
 
     // Computa se o voto é valido e guarda no array de votos.
+    // 11111|2
 	private void computarVoto(String mensagemRecebida) throws IOException {
 		String titulo = mensagemRecebida.split("\\|")[0];
 		String voto = mensagemRecebida.split("\\|")[1];

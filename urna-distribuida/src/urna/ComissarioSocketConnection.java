@@ -25,7 +25,7 @@ class ComissarioSocketConnection extends Thread {
     // Construção da classe com o socket
     public ComissarioSocketConnection(Socket socket) {
         super("Comissario");
-        this.carregaTitulos();
+        this.carregaTitulos(); // Carrega os titulos
         this.socket = socket;
         try {
         	input = new DataInputStream(socket.getInputStream());
@@ -49,7 +49,7 @@ class ComissarioSocketConnection extends Thread {
                     	sessao(mensagemRecebida);
                     } else {
                     	validaTitulo(mensagemRecebida);
-                    	output.flush(); // Limpa o output.
+                    	output.flush();
                     }
                 } while (input.available() != 0);
             }
@@ -61,22 +61,22 @@ class ComissarioSocketConnection extends Thread {
     // Verifica se o titulo que veio no comando, existe no array de titulos.
     // Caso exista, retorna OK para o cliente, caso contrário, retorna NO.
 	private void validaTitulo(String mensagemRecebida) throws IOException {
-		String comando = mensagemRecebida.split("\\|")[0];
-		String titulo = mensagemRecebida.split("\\|")[1];
-		if (comando.equals("VALIDAR")) {
+		String comando = mensagemRecebida.split("\\|")[0]; // Pega a posição zero (comando)
+		String titulo = mensagemRecebida.split("\\|")[1]; // Pega a posição um (dado)
+		if (comando.equals("VALIDAR")) { // Caso o comando seja VALIDAR
 			String mensagemParaEnviar = new String("NO".getBytes(), Charset.forName("UTF-8"));
-			 if(titulos.contains(titulo)) { 
+			 if(titulos.contains(titulo)) { // Caso o titulo exista no array de titulos
 		         mensagemParaEnviar = new String("OK".getBytes(), Charset.forName("UTF-8"));
 			 }
-			 output.writeUTF(mensagemParaEnviar);
+			 output.writeUTF(mensagemParaEnviar); // Devolve a mensagem ao Distribuidor
 		}
 	}
     
-	// Carrega a sessão e zona.
+	// Envia a sessão e a zona para o Distriuidor.
     private void sessao(String mensagem) throws IOException {
     	System.out.println("Comissario - Mensagem recebida :" + mensagem);
         String dadosDaSessao = new String(sessaoEZona.getBytes(), Charset.forName("UTF-8"));
-        output.writeUTF(dadosDaSessao);
-        output.flush(); // Limpa o output.
+        output.writeUTF(dadosDaSessao); // Devolve dados da sessão e zona ao Distribuidor
+        output.flush();
     }
 }
